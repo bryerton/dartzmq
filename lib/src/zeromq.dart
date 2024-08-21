@@ -30,6 +30,8 @@ class ZContext {
   /// Do we need to shutdown?
   bool _shutdown = false;
 
+  int _pollRateInMs = 1000;
+
   /// Used for shutting down asynchronously
   Completer? _stopCompleter;
 
@@ -47,10 +49,11 @@ class ZContext {
   ///
   /// Note only one context should exist throughout your application
   /// and it should be closed if the app is disposed
-  ZContext({int pollRateInMs = 16}) {
+  ZContext({int pollRateInMs = 1000}) {
     _context = _bindings.zmq_ctx_new();
     _poller = _bindings.zmq_poller_new();
-    _startPolling(pollRateInMs);
+    _pollRateInMs = pollRateInMs;
+    _startPolling();
   }
 
   /// Shutdown zeromq. Will stop [_poll] asynchronously.
@@ -63,9 +66,9 @@ class ZContext {
 
   /// Starts the periodic polling task if it was not started already and
   /// if there are actually listeners on sockets
-  void _startPolling(int pollRateInMs) {
+  void _startPolling() {
     if (_timer == null && _listenedSockets.isNotEmpty) {
-      _timer = Timer.periodic(Duration(milliseconds: pollRateInMs), (timer) => _poll());
+      _timer = Timer.periodic(Duration(milliseconds: _pollRateInMs), (timer) => _poll());
     }
   }
 
