@@ -1,5 +1,6 @@
 library dartzmq;
 
+import 'package:mutex/mutex.dart';
 import 'dart:async';
 import 'dart:collection';
 import 'dart:developer';
@@ -18,6 +19,9 @@ part 'socket.dart';
 
 // Native bindings
 final ZMQBindings _bindings = ZMQBindings();
+
+
+final m = Mutex();
 
 /// High-level wrapper around the ØMQ C++ api.
 class ZContext {
@@ -73,7 +77,9 @@ class ZContext {
   }
 
   /// Polling task receiving and handling socket messages
-  void _poll() {
+  void _poll() async {
+    await m.protect(() async {
+
     final socketCount = _listenedSockets.length;
 
     final pollerEvents =
@@ -130,6 +136,7 @@ class ZContext {
     _timer?.cancel();
     _timer = null;
     _stopCompleter?.complete(null);
+    });
   }
 
   /// Check whether a specified [capability] is available in the library.
