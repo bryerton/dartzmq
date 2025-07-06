@@ -1,8 +1,8 @@
 name: dartzmq
 description: A simple dart zeromq implementation/wrapper around the libzmq C++ library
-version: 1.0.1-dev.17
-homepage: https://github.com/enwi/dartzmq
-repository: https://github.com/enwi/dartzmq
+version: 1.0.2
+homepage: https://github.com/bryerton/dartzmq
+repository: https://github.com/bryerton/dartzmq
 
 environment:
   sdk: ">=2.17.6 <4.0.0"
@@ -11,6 +11,7 @@ environment:
 
 dependencies:
   ffi: ^2.0.0
+  mutex: ^3.1.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

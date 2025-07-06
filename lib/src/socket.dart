@@ -245,15 +245,14 @@ class ZBaseSocket {
   }
 
 
-  void setOptionInt32(final int option, final int value) {
+  void setOptionBool(final int option, final bool value) {
     final Pointer<Uint32> ptr = malloc.allocate(4);
-    ptr.value = value;
+    ptr.value = (value) ? 1 : 0;
     final result = _bindings.zmq_setsockopt(
         _socket, option, ptr.cast<Uint8>(), 4);
     malloc.free(ptr);
     _checkReturnCode(result, ignore: [EINTR]);
   }
-
 
   /// Sets the socket's long term secret key.
   /// You must set this on both CURVE client and server sockets, see zmq_curve(7).
